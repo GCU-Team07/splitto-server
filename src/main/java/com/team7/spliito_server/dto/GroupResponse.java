@@ -16,7 +16,6 @@ public class GroupResponse {
         this.members = members;
     }
 
-    // Getters and Setters
     public Long getGroupId() {
         return groupId;
     }

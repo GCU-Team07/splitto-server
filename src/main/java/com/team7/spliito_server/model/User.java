@@ -3,7 +3,7 @@ package com.team7.spliito_server.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "`user`") // MySQL 예약어 충돌 방지
+@Table(name = "`user`") // 예약어 충돌 방지
 public class User {
 
     @Id
@@ -17,10 +17,8 @@ public class User {
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
-    // 기본 생성자
     public User() {}
 
-    // 모든 필드를 포함하는 생성자
     public User(String name, Group group) {
         this.name = name;
         this.group = group;

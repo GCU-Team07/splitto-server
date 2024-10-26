@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "`group`") // MySQL 예약어 충돌 방지
+@Table(name = "`group`") // 예약어 충돌 방지
 @EntityListeners(AuditingEntityListener.class) // Auditing 기능 활성화
 public class Group {
 
@@ -59,18 +59,6 @@ public class Group {
 
     public void setMembers(List<User> members) {
         this.members = members;
-    }
-
-    // 멤버 추가 메서드
-    public void addMember(User member) {
-        members.add(member);
-        member.setGroup(this); // 양방향 연관 관계 설정
-    }
-
-    // 멤버 삭제 메서드
-    public void removeMember(User member) {
-        members.remove(member);
-        member.setGroup(null); // 양방향 연관 관계 해제
     }
 }
 

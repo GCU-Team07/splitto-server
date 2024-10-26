@@ -12,10 +12,8 @@ public class CreateGroupRequest {
     @NotEmpty(message = "Member names cannot be empty")  // 리스트가 비어 있거나 null일 경우 오류 발생
     private List<String> memberNames;  // 멤버 이름 목록
 
-    // 기본 생성자
     public CreateGroupRequest() {}
 
-    // 모든 필드를 포함하는 생성자
     public CreateGroupRequest(String groupName, List<String> memberNames) {
         this.groupName = groupName;
         this.memberNames = memberNames;

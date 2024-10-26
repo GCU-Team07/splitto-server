@@ -1,17 +1,14 @@
 package com.team7.spliito_server.controller;
 
 import com.team7.spliito_server.dto.CreateGroupRequest;
+import com.team7.spliito_server.dto.GroupResponse;
 import com.team7.spliito_server.service.GroupService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -37,6 +34,11 @@ public class GroupController {
         response.put("groupUrl", groupUrl);
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/all")
+    public List<GroupResponse> getAllGroups() {
+        return groupService.getAllGroups();
     }
 }
 

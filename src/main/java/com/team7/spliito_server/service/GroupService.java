@@ -1,14 +1,15 @@
 package com.team7.spliito_server.service;
 
 import com.team7.spliito_server.dto.CreateGroupRequest;
+import com.team7.spliito_server.dto.GroupResponse;
 import com.team7.spliito_server.model.Group;
 import com.team7.spliito_server.model.User;
 import com.team7.spliito_server.repository.GroupRepository;
 import com.team7.spliito_server.repository.UserRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,5 +56,21 @@ public class GroupService {
 
         // 생성된 그룹의 URL 반환
         return "group/" + savedGroup.getId();
+    }
+
+    @Transactional(readOnly = true)
+    public List<GroupResponse> getAllGroups() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        return groupRepository.findAll().stream()
+                .map(group -> new GroupResponse(
+                        group.getId(),
+                        group.getName(),
+                        group.getCreatedDate().format(formatter),
+                        group.getMembers().stream()
+                                .map(member -> member.getName())
+                                .collect(Collectors.toList())
+                ))
+                .collect(Collectors.toList());
     }
 }

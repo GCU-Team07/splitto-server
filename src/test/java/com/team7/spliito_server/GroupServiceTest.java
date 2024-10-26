@@ -95,5 +95,4 @@ class GroupServiceTest {
         assertTrue(memberNames.containsAll(List.of("A", "B", "C")), "멤버 이름이 일치해야 함");
     }
 
-
 }

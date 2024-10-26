@@ -1,11 +1,16 @@
 package com.team7.spliito_server.model;
 
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "`group`") // MySQL 예약어 충돌 방지
+@EntityListeners(AuditingEntityListener.class) // Auditing 기능 활성화
 public class Group {
 
     @Id
@@ -14,14 +19,16 @@ public class Group {
 
     private String name; // 그룹 이름
 
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdDate;  // 생성일
+
     // User 엔티티와의 일대다 관계 매핑
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<User> members = new ArrayList<>();
 
-    // 기본 생성자
     public Group() {}
 
-    // 모든 필드를 포함하는 생성자
     public Group(String name) {
         this.name = name;
     }
@@ -40,6 +47,10 @@ public class Group {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 
     public List<User> getMembers() {

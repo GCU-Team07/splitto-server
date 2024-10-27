@@ -1,32 +1,38 @@
 package com.team7.spliito_server;
 
+import com.team7.spliito_server.dto.AllMemberInGroupResponse;
 import com.team7.spliito_server.dto.CreateGroupRequest;
+import com.team7.spliito_server.dto.FindMembersInGroupRequest;
 import com.team7.spliito_server.model.Group;
 import com.team7.spliito_server.model.User;
 import com.team7.spliito_server.repository.GroupRepository;
 import com.team7.spliito_server.repository.UserRepository;
 import com.team7.spliito_server.service.GroupService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.internal.matchers.Find;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest
-@ActiveProfiles("test")
-@ExtendWith(SpringExtension.class)
-@Transactional
-class GroupServiceTest {
+//@SpringBootTest
+//@ActiveProfiles("test")
+//@ExtendWith(SpringExtension.class)
+//@Transactional
+class GroupServiceTest extends IntegrationTestSupport {
     @Autowired
     private GroupService groupService;
 
@@ -36,11 +42,17 @@ class GroupServiceTest {
     @Autowired
     private UserRepository userRepository;
 
-    @BeforeEach
-    void setup() {
-        // 각 테스트 전에 모든 데이터 삭제
-        groupRepository.deleteAll();
-        userRepository.deleteAll();
+//    @BeforeEach
+//    void setup() {
+//        // 각 테스트 전에 모든 데이터 삭제
+//        groupRepository.deleteAll();
+//        userRepository.deleteAll();
+//    }
+
+    @AfterEach
+    void tearDown() {
+        userRepository.deleteAllInBatch();
+        groupRepository.deleteAllInBatch();
     }
 
     @Test
@@ -94,5 +106,40 @@ class GroupServiceTest {
                 .toList();
         assertTrue(memberNames.containsAll(List.of("A", "B", "C")), "멤버 이름이 일치해야 함");
     }
+    @DisplayName("그룹 안 멤버를 가져올 수 있다.")
+    @Test
+    void getAllMembersInGroup() {
+        // given
+        LocalDateTime now = LocalDateTime.of(2024, 10, 27, 0, 0, 0);
 
+        Group g1 = makeGroup("g1", now);
+        Group g2 = makeGroup("g2", now.plusDays(1));
+        Group g3 = makeGroup("g3", now.plusDays(2));
+        List<Group> groups = groupRepository.saveAll(List.of(g1, g2, g3));
+
+        User u1 = new User("u1", groups.get(0));
+        User u2 = new User("u2", groups.get(0));
+        User u3 = new User("u3", groups.get(1));
+        User u4 = new User("u4", groups.get(1));
+        User u5 = new User("u5", groups.get(2));
+        User u6 = new User("u6", groups.get(2));
+
+        userRepository.saveAll(List.of(u1, u2, u3, u4, u5, u6));
+
+        FindMembersInGroupRequest request = new FindMembersInGroupRequest(groups.get(2).getId());
+
+        // when
+        List<String> result = groupService.getAllMembersInGroup(request).getMemberName();
+
+        // then
+        assertThat(result).hasSize(2)
+                .containsExactlyInAnyOrder("u5", "u6");
+    }
+
+    public static Group makeGroup(String name, LocalDateTime createdDate) {
+        return Group.builder()
+                .name(name)
+                .createdDate(createdDate)
+                .build();
+    }
 }

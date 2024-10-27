@@ -1,6 +1,8 @@
 package com.team7.spliito_server.service;
 
+import com.team7.spliito_server.dto.AllMemberInGroupResponse;
 import com.team7.spliito_server.dto.CreateGroupRequest;
+import com.team7.spliito_server.dto.FindMembersInGroupRequest;
 import com.team7.spliito_server.dto.GroupResponse;
 import com.team7.spliito_server.model.Group;
 import com.team7.spliito_server.model.User;
@@ -69,5 +71,14 @@ public class GroupService {
                                 .toList()
                 ))
                 .toList();
+    }
+
+    public AllMemberInGroupResponse getAllMembersInGroup(FindMembersInGroupRequest request) {
+        Long groupId = request.getGroupId();
+
+        List<String> userNames = userRepository.findByGroupId(groupId).stream()
+                .map(User::getName)
+                .toList();
+        return new AllMemberInGroupResponse(userNames);
     }
 }

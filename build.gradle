@@ -39,8 +39,21 @@ dependencies {
 	// Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// H2 DB
+	implementation 'com.h2database:h2'
 }
+
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+tasks.withType(Test) {
+	systemProperty 'file.encoding', 'UTF-8'
+}
+

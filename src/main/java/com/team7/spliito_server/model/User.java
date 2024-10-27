@@ -26,4 +26,8 @@ public class User extends BaseEntity {
         this.name = name;
         this.group = group;
     }
+
+    public User(String name) {
+        this.name = name;
+    }
 }

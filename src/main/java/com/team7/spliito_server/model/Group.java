@@ -1,7 +1,9 @@
 package com.team7.spliito_server.model;
 
+import com.team7.spliito_server.dto.AllMemberInGroupResponse;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,13 +30,25 @@ public class Group extends BaseEntity{
     private List<User> members = new ArrayList<>();
 
 
-
     public Group(String name) {
         this.name = name;
     }
 
+    @Builder
+    private Group(String name, LocalDateTime createdDate, List<User> members) {
+        this.name = name;
+        this.createdDate = createdDate;
+        this.members = members;
+    }
+
     public void setMembers(List<User> members) {
         this.members = members;
+    }
+
+    public AllMemberInGroupResponse toAllMemberInGroupResponse() {
+        return new AllMemberInGroupResponse(members.stream()
+                                            .map(User::getName)
+                                            .toList());
     }
 }
 

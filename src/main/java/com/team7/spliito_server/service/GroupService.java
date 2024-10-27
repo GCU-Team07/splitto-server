@@ -1,27 +1,27 @@
 package com.team7.spliito_server.service;
 
+import com.team7.spliito_server.dto.AllMemberInGroupResponse;
 import com.team7.spliito_server.dto.CreateGroupRequest;
+import com.team7.spliito_server.dto.FindMembersInGroupRequest;
 import com.team7.spliito_server.dto.GroupResponse;
 import com.team7.spliito_server.model.Group;
 import com.team7.spliito_server.model.User;
 import com.team7.spliito_server.repository.GroupRepository;
 import com.team7.spliito_server.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class GroupService {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
-
-    public GroupService(GroupRepository groupRepository, UserRepository userRepository) {
-        this.groupRepository = groupRepository;
-        this.userRepository = userRepository;
-    }
 
     /**
      * 그룹 생성 또는 업데이트
@@ -39,14 +39,14 @@ public class GroupService {
         List<String> existingMemberNames = group.getMembers() != null ?
                 group.getMembers().stream()
                         .map(User::getName)
-                        .collect(Collectors.toList())
+                        .toList()
                 : List.of(); // 새 그룹이면 빈 리스트로 초기화
 
         // 요청된 멤버 이름 중 기존에 없는 멤버만 추가
         List<User> newMembers = request.getMemberNames().stream()
                 .filter(name -> !existingMemberNames.contains(name)) // 기존 멤버와 중복되지 않는 이름만 추가
                 .map(name -> new User(name, group))
-                .collect(Collectors.toList());
+                .toList();
 
         // 그룹에 멤버 추가
         group.getMembers().addAll(newMembers);
@@ -58,7 +58,6 @@ public class GroupService {
         return "group/" + savedGroup.getId();
     }
 
-    @Transactional(readOnly = true)
     public List<GroupResponse> getAllGroups() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -68,9 +67,18 @@ public class GroupService {
                         group.getName(),
                         group.getCreatedDate().format(formatter),
                         group.getMembers().stream()
-                                .map(member -> member.getName())
-                                .collect(Collectors.toList())
+                                .map(User::getName)
+                                .toList()
                 ))
-                .collect(Collectors.toList());
+                .toList();
+    }
+
+    public AllMemberInGroupResponse getAllMembersInGroup(FindMembersInGroupRequest request) {
+        Long groupId = request.getGroupId();
+
+        List<String> userNames = userRepository.findByGroupId(groupId).stream()
+                .map(User::getName)
+                .toList();
+        return new AllMemberInGroupResponse(userNames);
     }
 }

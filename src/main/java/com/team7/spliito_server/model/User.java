@@ -1,13 +1,18 @@
 package com.team7.spliito_server.model;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "`user`") // 예약어 충돌 방지
-public class User {
+public class User extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name; // 사용자 이름
@@ -17,34 +22,12 @@ public class User {
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
-    public User() {}
-
     public User(String name, Group group) {
         this.name = name;
         this.group = group;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
+    public User(String name) {
         this.name = name;
-    }
-
-    public Group getGroup() {
-        return group;
-    }
-
-    public void setGroup(Group group) {
-        this.group = group;
     }
 }

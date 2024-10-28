@@ -6,21 +6,24 @@ import com.team7.spliito_server.dto.FindMembersInGroupRequest;
 import com.team7.spliito_server.dto.GroupResponse;
 import com.team7.spliito_server.service.GroupService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Validated
 @RestController
 @RequestMapping("/group")
+@RequiredArgsConstructor
 public class GroupController {
+
     private final GroupService groupService;
 
-    public GroupController(GroupService groupService) {
-        this.groupService = groupService;
-    }
 
     /**
      * 그룹 생성 API 엔드포인트
@@ -44,7 +47,7 @@ public class GroupController {
     }
 
     @GetMapping("/{groupId}/members")
-    public AllMemberInGroupResponse getAllMembersInGroup(@PathVariable Long groupId) {
+    public AllMemberInGroupResponse getAllMembersInGroup(@Positive(message = "잘못된 값입니다!") @PathVariable Long groupId) {
         return groupService.getAllMembersInGroup(new FindMembersInGroupRequest(groupId));
     }
 }

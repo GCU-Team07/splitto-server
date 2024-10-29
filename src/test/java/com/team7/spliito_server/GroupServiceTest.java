@@ -1,6 +1,5 @@
 package com.team7.spliito_server;
 
-import com.team7.spliito_server.dto.AllMemberInGroupResponse;
 import com.team7.spliito_server.dto.CreateGroupRequest;
 import com.team7.spliito_server.dto.FindMembersInGroupRequest;
 import com.team7.spliito_server.model.Group;
@@ -9,15 +8,9 @@ import com.team7.spliito_server.repository.GroupRepository;
 import com.team7.spliito_server.repository.UserRepository;
 import com.team7.spliito_server.service.GroupService;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.internal.matchers.Find;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -57,6 +50,7 @@ class GroupServiceTest extends IntegrationTestSupport {
 
     @Test
     @DisplayName("Creation of a new group")
+    @Transactional
     void testCreateNewGroup() {
         // given
         CreateGroupRequest request = new CreateGroupRequest();
@@ -80,6 +74,7 @@ class GroupServiceTest extends IntegrationTestSupport {
 
     @Test
     @DisplayName("Add new members to an existing group")
+    @Transactional
     void testAddNewMembersToExistingGroup() {
         // given
         CreateGroupRequest initialRequest = new CreateGroupRequest();

@@ -2,7 +2,9 @@ package com.team7.spliito_server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team7.spliito_server.controller.GroupController;
+import com.team7.spliito_server.controller.PaymentController;
 import com.team7.spliito_server.service.GroupService;
+import com.team7.spliito_server.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -11,7 +13,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @ActiveProfiles("test")
 @WebMvcTest(controllers = {
-      GroupController.class
+        GroupController.class,
+        PaymentController.class
 })
 public abstract class ControllerTestSupport {
     @Autowired
@@ -22,4 +25,7 @@ public abstract class ControllerTestSupport {
 
     @MockBean
     protected GroupService groupService;
+
+    @MockBean
+    protected PaymentService paymentService;
 }

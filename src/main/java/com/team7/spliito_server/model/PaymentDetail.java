@@ -16,29 +16,34 @@ public class PaymentDetail extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 이미 돈을 지불한 사람
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    @JoinColumn(name = "paid_user")
+    private User paidUser;
+
+    // 돈을 내야 하는 사람 (payUser가 paidUser에게 돈을 보내줘야 함)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pay_user")
+    private User payUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Payment payment;
 
-    private boolean isPaid;
-
     private int price;
 
     @Builder
-    private PaymentDetail(User user, Payment payment, boolean isPaid, int price) {
-        this.user = user;
+    private PaymentDetail(User paidUser, User payUser, Payment payment, int price) {
+        this.paidUser = paidUser;
+        this.payUser = payUser;
         this.payment = payment;
-        this.isPaid = isPaid;
         this.price = price;
     }
 
-    public static PaymentDetail of(User user, Payment payment, boolean isPaid, int price) {
+    public static PaymentDetail of(User paidUser, User payUser, Payment payment, int price) {
         return PaymentDetail.builder()
-                .user(user)
+                .paidUser(paidUser)
+                .payUser(payUser)
                 .payment(payment)
-                .isPaid(isPaid)
                 .price(price)
                 .build();
     }

@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -65,7 +66,7 @@ public class GroupService {
                 .map(group -> new GroupResponse(
                         group.getId(),
                         group.getName(),
-                        group.getCreatedDate().format(formatter),
+                        (group.getCreatedDate() != null ? group.getCreatedDate() : LocalDateTime.now()).format(formatter),
                         group.getMembers().stream()
                                 .map(User::getName)
                                 .toList()

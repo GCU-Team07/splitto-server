@@ -18,7 +18,7 @@ public class AddPaymentRequest {
     // 돈을 낸 멤버의 PK
     @NotNull(message = "돈을 지불한 멤버는 필수입니다!")
     @Positive(message = "잘못된 멤버입니다!")
-    private Long paidMember;
+    private String paidMember;
 
     @NotBlank(message = "품목의 이름은 필수입니다!")
     private String itemName;
@@ -30,14 +30,14 @@ public class AddPaymentRequest {
     private List<String> payMemberName;
 
     @Builder
-    private AddPaymentRequest(Long paidMember, String itemName, int itemPrice, List<String> payMemberName) {
+    private AddPaymentRequest(String paidMember, String itemName, int itemPrice, List<String> payMemberName) {
         this.paidMember = paidMember;
         this.itemName = itemName;
         this.itemPrice = itemPrice;
         this.payMemberName = payMemberName;
     }
 
-    public static AddPaymentRequest of(Long paidMember, String itemName, int itemPrice, List<String> payMemberName) {
+    public static AddPaymentRequest of(String paidMember, String itemName, int itemPrice, List<String> payMemberName) {
         return AddPaymentRequest.builder()
                 .paidMember(paidMember)
                 .itemName(itemName)

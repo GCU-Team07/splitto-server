@@ -1,7 +1,8 @@
 package com.team7.spliito_server;
 
 import com.team7.spliito_server.dto.CreateGroupRequest;
-import com.team7.spliito_server.dto.FindMembersInGroupRequest;
+import com.team7.spliito_server.dto.GroupMetaInfoRequest;
+import com.team7.spliito_server.dto.GroupMetaInfoResponse;
 import com.team7.spliito_server.model.Group;
 import com.team7.spliito_server.model.User;
 import com.team7.spliito_server.repository.GroupRepository;
@@ -101,7 +102,7 @@ class GroupServiceTest extends IntegrationTestSupport {
                 .toList();
         assertTrue(memberNames.containsAll(List.of("A", "B", "C")), "멤버 이름이 일치해야 함");
     }
-    @DisplayName("그룹 안 멤버를 가져올 수 있다.")
+    @DisplayName("그룹의 메타정보를 가져올 수 있다.")
     @Test
     void getAllMembersInGroup() {
         // given
@@ -121,13 +122,17 @@ class GroupServiceTest extends IntegrationTestSupport {
 
         userRepository.saveAll(List.of(u1, u2, u3, u4, u5, u6));
 
-        FindMembersInGroupRequest request = new FindMembersInGroupRequest(groups.get(2).getId());
+        GroupMetaInfoRequest request = new GroupMetaInfoRequest(groups.get(2).getId());
 
         // when
-        List<String> result = groupService.getAllMembersInGroup(request).getMemberName();
+        GroupMetaInfoResponse result = groupService.getGroupMetaInfo(request);
 
         // then
-        assertThat(result).hasSize(2)
+        assertThat(result)
+                .extracting("groupName", "createdDate")
+                        .containsExactly("g3", "2024/10/29");
+
+        assertThat(result.getMemberName()).hasSize(2)
                 .containsExactlyInAnyOrder("u5", "u6");
     }
 

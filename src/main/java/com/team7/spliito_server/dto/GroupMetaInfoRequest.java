@@ -6,11 +6,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FindMembersInGroupRequest {
+public class GroupMetaInfoRequest {
 
     private Long groupId;
 
-    public FindMembersInGroupRequest(Long groupId) {
+    public GroupMetaInfoRequest(Long groupId) {
         this.groupId = groupId;
     }
 }

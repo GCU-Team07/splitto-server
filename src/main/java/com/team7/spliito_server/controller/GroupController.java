@@ -1,8 +1,8 @@
 package com.team7.spliito_server.controller;
 
-import com.team7.spliito_server.dto.AllMemberInGroupResponse;
+import com.team7.spliito_server.dto.GroupMetaInfoResponse;
 import com.team7.spliito_server.dto.CreateGroupRequest;
-import com.team7.spliito_server.dto.FindMembersInGroupRequest;
+import com.team7.spliito_server.dto.GroupMetaInfoRequest;
 import com.team7.spliito_server.dto.GroupResponse;
 import com.team7.spliito_server.service.GroupService;
 import jakarta.validation.Valid;
@@ -47,8 +47,8 @@ public class GroupController {
     }
 
     @GetMapping("/{groupId}/members")
-    public AllMemberInGroupResponse getAllMembersInGroup(@Positive(message = "잘못된 값입니다!") @PathVariable Long groupId) {
-        return groupService.getAllMembersInGroup(new FindMembersInGroupRequest(groupId));
+    public GroupMetaInfoResponse getAllMembersInGroup(@Positive(message = "잘못된 값입니다!") @PathVariable Long groupId) {
+        return groupService.getGroupMetaInfo(new GroupMetaInfoRequest(groupId));
     }
 }
 

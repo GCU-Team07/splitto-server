@@ -1,8 +1,8 @@
 package com.team7.spliito_server.service;
 
-import com.team7.spliito_server.dto.AllMemberInGroupResponse;
+import com.team7.spliito_server.dto.GroupMetaInfoResponse;
 import com.team7.spliito_server.dto.CreateGroupRequest;
-import com.team7.spliito_server.dto.FindMembersInGroupRequest;
+import com.team7.spliito_server.dto.GroupMetaInfoRequest;
 import com.team7.spliito_server.dto.GroupResponse;
 import com.team7.spliito_server.model.Group;
 import com.team7.spliito_server.model.User;
@@ -74,12 +74,17 @@ public class GroupService {
                 .toList();
     }
 
-    public AllMemberInGroupResponse getAllMembersInGroup(FindMembersInGroupRequest request) {
+    public GroupMetaInfoResponse getGroupMetaInfo(GroupMetaInfoRequest request) {
         Long groupId = request.getGroupId();
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("존재하지 않는 그룹입니다!")
+                );
 
-        List<String> userNames = userRepository.findByGroupId(groupId).stream()
+        List<String> memberNameInGroup = userRepository.findByGroupId(groupId).stream()
                 .map(User::getName)
                 .toList();
-        return new AllMemberInGroupResponse(userNames);
+
+        return group.toGroupMetaInfoResponse(memberNameInGroup);
     }
 }

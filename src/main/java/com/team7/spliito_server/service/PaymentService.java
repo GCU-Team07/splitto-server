@@ -33,20 +33,29 @@ public class PaymentService {
 
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다!"));
-        User paidUser = userRepository.findById(request.getPaidMember())
+        User paidUser = userRepository.findByUserNameAndGroupId(request.getPaidMember(), groupId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다!"));
-
+        
         Payment payment = Payment.of(request.getItemName(), request.getItemPrice(), group, now);
         Payment savedPayment = paymentRepository.save(payment);
+        
+        Set<User> payUsers = getPayUsersWithNameAndGroupId(groupId, request);
 
-        // paidUser에게 돈 지불해야 하는 유저들 가져옴
-        Set<User> payUsers = request.getPayMemberName().stream()
-                .map(name -> userRepository.findByUserNameAndGroupId(name, groupId)
-                        .orElseThrow(() -> new IllegalArgumentException("그룹에 존재하지 않는 유저입니다!")))
-                .collect(Collectors.toSet());
+        int eachPrice = calculateEachPrice(request, payUsers);
+        savePaymentDetails(paidUser, savedPayment, payUsers, eachPrice);
 
-        // paidUser에게 내야 하는 금액 계산 + PaymentDetail 저장 (돈을 낸 유저, 돈을 내야 하는 유저, ... 순)
-        int eachPrice = request.getItemPrice() / payUsers.size();
+        List<String> paidUserNames = payUsers.stream()
+                .map(User::getName)
+                .toList();
+
+        return new AddPaymentResponse(savedPayment.getId(), eachPrice, paidUserNames);
+    }
+
+    private int calculateEachPrice(AddPaymentRequest request, Set<User> payUsers) {
+        return request.getItemPrice() / payUsers.size();
+    }
+
+    private void savePaymentDetails(User paidUser, Payment savedPayment, Set<User> payUsers, int eachPrice) {
         payUsers.forEach(payUser -> {
             boolean isPayUser = !paidUser.getId().equals(payUser.getId());
             if (isPayUser) {
@@ -54,11 +63,12 @@ public class PaymentService {
                 paymentDetailRepository.save(paymentDetail);
             }
         });
+    }
 
-        List<String> paidUserNames = payUsers.stream()
-                .map(User::getName)
-                .toList();
-
-        return new AddPaymentResponse(savedPayment.getId(), eachPrice, paidUserNames);
+    private Set<User> getPayUsersWithNameAndGroupId(Long groupId, AddPaymentRequest request) {
+        return request.getPayMemberName().stream()
+                .map(name -> userRepository.findByUserNameAndGroupId(name, groupId)
+                        .orElseThrow(() -> new IllegalArgumentException("그룹에 존재하지 않는 유저입니다!")))
+                .collect(Collectors.toSet());
     }
 }

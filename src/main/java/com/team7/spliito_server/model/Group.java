@@ -1,5 +1,6 @@
 package com.team7.spliito_server.model;
 
+import com.team7.spliito_server.dto.GroupMetaInfoResponse;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -39,8 +40,8 @@ public class Group extends BaseEntity{
         this.createdDate = createdDate;
     }
 
-//    public void setMembers(List<User> members) {
-//        this.members = members;
-//    }
+    public GroupMetaInfoResponse toGroupMetaInfoResponse(List<String> userNames) {
+        return new GroupMetaInfoResponse(name, createdDate, userNames);
+    }
 }
 

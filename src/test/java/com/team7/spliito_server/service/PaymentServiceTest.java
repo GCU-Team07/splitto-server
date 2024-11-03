@@ -70,7 +70,7 @@ class PaymentServiceTest extends IntegrationTestSupport {
         User paidMember = users.get(0);
 
         // u2, u3가 각각 2000원씩 u1에게 보내야 함
-        AddPaymentRequest request = AddPaymentRequest.of(paidMember.getId(), "item", 6000, List.of("u1", "u2", "u3"));
+        AddPaymentRequest request = AddPaymentRequest.of(paidMember.getName(), "item", 6000, List.of("u1", "u2", "u3"));
 
         // when
         AddPaymentResponse addPaymentResponse = paymentService.addPayment(groupId, request, now);
@@ -111,7 +111,7 @@ class PaymentServiceTest extends IntegrationTestSupport {
         User paidMember = users.get(0);
 
         // u1이 u2, u3에게 사 준 경우 (각자 3000씩 u1에게 보내야 함)
-        AddPaymentRequest request = AddPaymentRequest.of(paidMember.getId(), "item", 6000, List.of("u2", "u3"));
+        AddPaymentRequest request = AddPaymentRequest.of(paidMember.getName(), "item", 6000, List.of("u2", "u3"));
 
         // when
         AddPaymentResponse addPaymentResponse = paymentService.addPayment(groupId, request, now);
@@ -150,7 +150,7 @@ class PaymentServiceTest extends IntegrationTestSupport {
 
         User paidMember = users.get(0);
 
-        AddPaymentRequest request = AddPaymentRequest.of(paidMember.getId(), "item", 6000, List.of("u2", "u3"));
+        AddPaymentRequest request = AddPaymentRequest.of(paidMember.getName(), "item", 6000, List.of("u2", "u3"));
 
         // when // then
         assertThatThrownBy(() -> paymentService.addPayment(-1L, request, now))
@@ -181,7 +181,7 @@ class PaymentServiceTest extends IntegrationTestSupport {
         Long groupId = groups.get(0).getId();
         User paidMember = users.get(0);
 
-        AddPaymentRequest request = AddPaymentRequest.of(-1L, "item", 6000, List.of("u2", "u3"));
+        AddPaymentRequest request = AddPaymentRequest.of("name", "item", 6000, List.of("u2", "u3"));
 
         // when // then
         assertThatThrownBy(() -> paymentService.addPayment(groupId, request, now))
@@ -212,7 +212,7 @@ class PaymentServiceTest extends IntegrationTestSupport {
         Long groupId = groups.get(0).getId();
         User paidMember = users.get(0);
 
-        AddPaymentRequest request = AddPaymentRequest.of(paidMember.getId(), "item", 6000, List.of("u4", "u5"));
+        AddPaymentRequest request = AddPaymentRequest.of(paidMember.getName(), "item", 6000, List.of("u4", "u5"));
 
         // when // then
         assertThatThrownBy(() -> paymentService.addPayment(groupId, request, now))

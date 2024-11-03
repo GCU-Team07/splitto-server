@@ -22,7 +22,7 @@ class PaymentControllerTest extends ControllerTestSupport {
     void addPayment() throws Exception {
         // given
         Long groupId = 1L;
-        AddPaymentRequest request = AddPaymentRequest.of(1L, "item", 1000, List.of("a", "b"));
+        AddPaymentRequest request = AddPaymentRequest.of("name", "item", 1000, List.of("a", "b"));
 
         // when // then
         mockMvc.perform(post("/payment/" + groupId)
@@ -38,7 +38,7 @@ class PaymentControllerTest extends ControllerTestSupport {
     void addPayment_invalidGroupID() throws Exception {
         // given
         Long groupId = -1L;
-        AddPaymentRequest request = AddPaymentRequest.of(1L, "item", 1000, List.of("a", "b"));
+        AddPaymentRequest request = AddPaymentRequest.of("name", "item", 1000, List.of("a", "b"));
 
         // when // then
         mockMvc.perform(post("/payment/" + groupId)
@@ -76,7 +76,7 @@ class PaymentControllerTest extends ControllerTestSupport {
     void addPayment_invalidPaidMember() throws Exception {
         // given
         Long groupId = 1L;
-        AddPaymentRequest request = AddPaymentRequest.of(-1L, "item", 1000, List.of("a", "b"));
+        AddPaymentRequest request = AddPaymentRequest.of(null, "item", 1000, List.of("a", "b"));
 
         // when // then
         mockMvc.perform(post("/payment/" + groupId)
@@ -87,7 +87,7 @@ class PaymentControllerTest extends ControllerTestSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
                 .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
-                .andExpect(jsonPath("$.message").value( "잘못된 멤버입니다!"));
+                .andExpect(jsonPath("$.message").value( "돈을 지불한 멤버는 필수입니다!"));
     }
 
     @DisplayName("빈 품목 이름이 들어올 수 있다.")
@@ -95,7 +95,7 @@ class PaymentControllerTest extends ControllerTestSupport {
     void addPayment_invalidItemName() throws Exception {
         // given
         Long groupId = 1L;
-        AddPaymentRequest request = AddPaymentRequest.of(1L, null, 1000, List.of("a", "b"));
+        AddPaymentRequest request = AddPaymentRequest.of("name", null, 1000, List.of("a", "b"));
 
         // when // then
         mockMvc.perform(post("/payment/" + groupId)
@@ -114,7 +114,7 @@ class PaymentControllerTest extends ControllerTestSupport {
     void addPayment_invalidItemPrice() throws Exception {
         // given
         Long groupId = 1L;
-        AddPaymentRequest request = AddPaymentRequest.of(1L, "item", 0, List.of("a", "b"));
+        AddPaymentRequest request = AddPaymentRequest.of("name", "item", 0, List.of("a", "b"));
 
         // when // then
         mockMvc.perform(post("/payment/" + groupId)
@@ -133,7 +133,7 @@ class PaymentControllerTest extends ControllerTestSupport {
     void addPayment_invalidPayMember() throws Exception {
         // given
         Long groupId = 1L;
-        AddPaymentRequest request = AddPaymentRequest.of(1L, "item", 1000, List.of());
+        AddPaymentRequest request = AddPaymentRequest.of("name", "item", 1000, List.of());
 
         // when // then
         mockMvc.perform(post("/payment/" + groupId)

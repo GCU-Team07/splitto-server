@@ -15,9 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class AddPaymentRequest {
 
-    // 돈을 낸 멤버의 PK
-    @NotNull(message = "돈을 지불한 멤버는 필수입니다!")
-    @Positive(message = "잘못된 멤버입니다!")
+    @NotBlank(message = "돈을 지불한 멤버는 필수입니다!")
     private String paidMember;
 
     @NotBlank(message = "품목의 이름은 필수입니다!")

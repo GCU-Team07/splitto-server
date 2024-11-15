@@ -1,0 +1,50 @@
+name: Splitway server CI
+
+# main 브랜치에 PR 열릴 때 실행
+on:
+  pull_request:
+    types: [opened]
+    branches: ["main"]
+
+jobs:
+  build:
+    # Ubuntu 환경에서 실행
+    runs-on: ubuntu-latest
+
+    steps:
+      # Repo 코드를 CI 서버에 반영
+    - name : Checkout code
+      uses : actions/checkout@v4
+
+      # JDK 17 사용 
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # gradle caching - 빌드 시간 향상
+    - name: Gradle Caching
+      uses: actions/cache@v3
+      with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+    # 권한 없음 막기 위해 ./gradlew build와 나눠서 작성
+    - name : Make gradlew executable
+      run : chmod +x ./gradlew    
+
+    # build & test 자동화 
+    - name: Build with Gradle Wrapper
+      run: ./gradlew build    
+
+    # Image build & push to registry
+    - name : Docker build & push to registry
+      run : |
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        docker build -t ${{secrets.DOCKER_REPO}} .
+        docker push ${{secrets.DOCKER_REPO}}

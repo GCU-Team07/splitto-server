@@ -33,7 +33,7 @@ public class Group extends BaseEntity {
         this.name = name;
         this.createdDate = createdDate;
     }
-    
+
     public GroupMetaInfoResponse toGroupMetaInfoResponse(List<String> userNames) {
         return new GroupMetaInfoResponse(name, createdDate, userNames);
     }

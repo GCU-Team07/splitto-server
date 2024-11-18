@@ -10,13 +10,13 @@ public class CreateGroupRequest {
     private String groupName;
 
     @NotEmpty(message = "Member names cannot be empty")  // 리스트가 비어 있거나 null일 경우 오류 발생
-    private List<String> memberNames;  // 멤버 이름 목록
+    private List<String> memberName;  // 멤버 이름 목록
 
     public CreateGroupRequest() {}
 
-    public CreateGroupRequest(String groupName, List<String> memberNames) {
+    public CreateGroupRequest(String groupName, List<String> memberName) {
         this.groupName = groupName;
-        this.memberNames = memberNames;
+        this.memberName = memberName;
     }
 
     public String getGroupName() {
@@ -27,11 +27,11 @@ public class CreateGroupRequest {
         this.groupName = groupName;
     }
 
-    public List<String> getMemberNames() {
-        return memberNames;
+    public List<String> getMemberName() {
+        return memberName;
     }
 
-    public void setMemberNames(List<String> memberNames) {
-        this.memberNames = memberNames;
+    public void setMemberName(List<String> memberName) {
+        this.memberName = memberName;
     }
 }

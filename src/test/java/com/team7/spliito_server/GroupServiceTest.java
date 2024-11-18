@@ -56,7 +56,7 @@ class GroupServiceTest extends IntegrationTestSupport {
         // given
         CreateGroupRequest request = new CreateGroupRequest();
         request.setGroupName("Test Group");
-        request.setMemberNames(List.of("A", "B"));
+        request.setMemberName(List.of("A", "B"));
 
         // when
         String groupUrl = groupService.createOrUpdateGroup(request);
@@ -80,13 +80,13 @@ class GroupServiceTest extends IntegrationTestSupport {
         // given
         CreateGroupRequest initialRequest = new CreateGroupRequest();
         initialRequest.setGroupName("Test Group");
-        initialRequest.setMemberNames(List.of("A"));
+        initialRequest.setMemberName(List.of("A"));
 
         groupService.createOrUpdateGroup(initialRequest); // 초기 그룹 생성
 
         CreateGroupRequest updateRequest = new CreateGroupRequest();
         updateRequest.setGroupName("Test Group");
-        updateRequest.setMemberNames(List.of("A", "B", "C"));
+        updateRequest.setMemberName(List.of("A", "B", "C"));
 
         // when
         String updatedGroupUrl = groupService.createOrUpdateGroup(updateRequest);

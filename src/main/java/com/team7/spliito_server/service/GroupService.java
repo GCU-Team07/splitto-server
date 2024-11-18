@@ -44,7 +44,7 @@ public class GroupService {
                 : List.of(); // 새 그룹이면 빈 리스트로 초기화
 
         // 요청된 멤버 이름 중 기존에 없는 멤버만 추가
-        List<User> newMembers = request.getMemberNames().stream()
+        List<User> newMembers = request.getMemberName().stream()
                 .filter(name -> !existingMemberNames.contains(name)) // 기존 멤버와 중복되지 않는 이름만 추가
                 .map(name -> new User(name, group))
                 .toList();

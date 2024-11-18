@@ -56,7 +56,7 @@ class GroupServiceTest extends IntegrationTestSupport {
         // given
         CreateGroupRequest request = new CreateGroupRequest();
         request.setGroupName("Test Group");
-        request.setMemberNames(List.of("A", "B"));
+        request.setMemberName(List.of("A", "B"));
 
         // when
         String groupUrl = groupService.createOrUpdateGroup(request);
@@ -80,13 +80,13 @@ class GroupServiceTest extends IntegrationTestSupport {
         // given
         CreateGroupRequest initialRequest = new CreateGroupRequest();
         initialRequest.setGroupName("Test Group");
-        initialRequest.setMemberNames(List.of("A"));
+        initialRequest.setMemberName(List.of("A"));
 
         groupService.createOrUpdateGroup(initialRequest); // 초기 그룹 생성
 
         CreateGroupRequest updateRequest = new CreateGroupRequest();
         updateRequest.setGroupName("Test Group");
-        updateRequest.setMemberNames(List.of("A", "B", "C"));
+        updateRequest.setMemberName(List.of("A", "B", "C"));
 
         // when
         String updatedGroupUrl = groupService.createOrUpdateGroup(updateRequest);
@@ -108,9 +108,9 @@ class GroupServiceTest extends IntegrationTestSupport {
         // given
         LocalDateTime now = LocalDateTime.of(2024, 10, 27, 0, 0, 0);
 
-        Group g1 = makeGroup("g1", now);
-        Group g2 = makeGroup("g2", now.plusDays(1));
-        Group g3 = makeGroup("g3", now.plusDays(2));
+        Group g1 = new Group("g1", now);
+        Group g2 = new Group("g2", now.plusDays(1));
+        Group g3 = new Group("g3", now.plusDays(2));
         List<Group> groups = groupRepository.saveAll(List.of(g1, g2, g3));
 
         User u1 = new User("u1", groups.get(0));
@@ -134,12 +134,5 @@ class GroupServiceTest extends IntegrationTestSupport {
 
         assertThat(result.getMemberName()).hasSize(2)
                 .containsExactlyInAnyOrder("u5", "u6");
-    }
-
-    public static Group makeGroup(String name, LocalDateTime createdDate) {
-        return Group.builder()
-                .name(name)
-                .createdDate(createdDate)
-                .build();
     }
 }

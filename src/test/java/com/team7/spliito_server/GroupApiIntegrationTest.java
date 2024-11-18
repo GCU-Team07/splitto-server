@@ -50,7 +50,7 @@ class GroupApiIntegrationTest extends IntegrationTestSupport {
     void testCreateGroupApi() throws Exception {
         CreateGroupRequest request = new CreateGroupRequest();
         request.setGroupName("Integration Test Group");
-        request.setMemberNames(List.of("A", "B"));
+        request.setMemberName(List.of("A", "B"));
 
         mockMvc.perform(post("/group")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -64,7 +64,7 @@ class GroupApiIntegrationTest extends IntegrationTestSupport {
     void testCreateGroupApiInvalidRequest() throws Exception {
         CreateGroupRequest invalidRequest = new CreateGroupRequest();
         invalidRequest.setGroupName("");  // empty group name
-        invalidRequest.setMemberNames(List.of("A", "B"));
+        invalidRequest.setMemberName(List.of("A", "B"));
 
         mockMvc.perform(post("/group")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -77,11 +77,11 @@ class GroupApiIntegrationTest extends IntegrationTestSupport {
     void testGetAllGroupsApi() throws Exception {
         CreateGroupRequest request1 = new CreateGroupRequest();
         request1.setGroupName("Group 1");
-        request1.setMemberNames(List.of("A", "B"));
+        request1.setMemberName(List.of("A", "B"));
 
         CreateGroupRequest request2 = new CreateGroupRequest();
         request2.setGroupName("Group 2");
-        request2.setMemberNames(List.of("C", "D"));
+        request2.setMemberName(List.of("C", "D"));
 
         mockMvc.perform(post("/group")
                         .contentType(MediaType.APPLICATION_JSON)

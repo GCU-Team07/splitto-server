@@ -52,9 +52,9 @@ class PaymentServiceTest extends IntegrationTestSupport {
         // given
         LocalDateTime now = LocalDateTime.of(2024, 10, 27, 0, 0, 0);
 
-        Group g1 = makeGroup("g1", now);
-        Group g2 = makeGroup("g2", now.plusDays(1));
-        Group g3 = makeGroup("g3", now.plusDays(2));
+        Group g1 = new Group("g1", now);
+        Group g2 = new Group("g2", now.plusDays(1));
+        Group g3 = new Group("g3", now.plusDays(2));
         List<Group> groups = groupRepository.saveAll(List.of(g1, g2, g3));
 
         User u1 = new User("u1", groups.get(0));
@@ -93,9 +93,9 @@ class PaymentServiceTest extends IntegrationTestSupport {
         // given
         LocalDateTime now = LocalDateTime.of(2024, 10, 27, 0, 0, 0);
 
-        Group g1 = makeGroup("g1", now);
-        Group g2 = makeGroup("g2", now.plusDays(1));
-        Group g3 = makeGroup("g3", now.plusDays(2));
+        Group g1 = new Group("g1", now);
+        Group g2 = new Group("g2", now.plusDays(1));
+        Group g3 = new Group("g3", now.plusDays(2));
         List<Group> groups = groupRepository.saveAll(List.of(g1, g2, g3));
 
         User u1 = new User("u1", groups.get(0));
@@ -134,9 +134,9 @@ class PaymentServiceTest extends IntegrationTestSupport {
         // given
         LocalDateTime now = LocalDateTime.of(2024, 10, 27, 0, 0, 0);
 
-        Group g1 = makeGroup("g1", now);
-        Group g2 = makeGroup("g2", now.plusDays(1));
-        Group g3 = makeGroup("g3", now.plusDays(2));
+        Group g1 = new Group("g1", now);
+        Group g2 = new Group("g2", now.plusDays(1));
+        Group g3 = new Group("g3", now.plusDays(2));
         List<Group> groups = groupRepository.saveAll(List.of(g1, g2, g3));
 
         User u1 = new User("u1", groups.get(0));
@@ -164,9 +164,9 @@ class PaymentServiceTest extends IntegrationTestSupport {
         // given
         LocalDateTime now = LocalDateTime.of(2024, 10, 27, 0, 0, 0);
 
-        Group g1 = makeGroup("g1", now);
-        Group g2 = makeGroup("g2", now.plusDays(1));
-        Group g3 = makeGroup("g3", now.plusDays(2));
+        Group g1 = new Group("g1", now);
+        Group g2 = new Group("g2", now.plusDays(1));
+        Group g3 = new Group("g3", now.plusDays(2));
         List<Group> groups = groupRepository.saveAll(List.of(g1, g2, g3));
 
         User u1 = new User("u1", groups.get(0));
@@ -195,9 +195,9 @@ class PaymentServiceTest extends IntegrationTestSupport {
         // given
         LocalDateTime now = LocalDateTime.of(2024, 10, 27, 0, 0, 0);
 
-        Group g1 = makeGroup("g1", now);
-        Group g2 = makeGroup("g2", now.plusDays(1));
-        Group g3 = makeGroup("g3", now.plusDays(2));
+        Group g1 = new Group("g1", now);
+        Group g2 = new Group("g2", now.plusDays(1));
+        Group g3 = new Group("g3", now.plusDays(2));
         List<Group> groups = groupRepository.saveAll(List.of(g1, g2, g3));
 
         User u1 = new User("u1", groups.get(0));
@@ -218,14 +218,5 @@ class PaymentServiceTest extends IntegrationTestSupport {
         assertThatThrownBy(() -> paymentService.addPayment(groupId, request, now))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("그룹에 존재하지 않는 유저입니다!");
-    }
-
-
-
-    public static Group makeGroup(String name, LocalDateTime createdDate) {
-        return Group.builder()
-                .name(name)
-                .createdDate(createdDate)
-                .build();
     }
 }

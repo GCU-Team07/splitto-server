@@ -34,7 +34,7 @@ public class GroupService {
     public String createOrUpdateGroup(CreateGroupRequest request) {
         // 기존 그룹이 존재하면 가져오고, 없으면 새로 생성
         Group group = groupRepository.findByName(request.getGroupName())
-                .orElseGet(() -> new Group(request.getGroupName()));
+                .orElseGet(() -> new Group(request.getGroupName(), LocalDateTime.now()));
 
         // 기존 멤버 이름 목록을 수집하여, 중복 추가를 방지
         List<String> existingMemberNames = group.getMembers() != null ?

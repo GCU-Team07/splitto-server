@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "`group`") // 예약어 충돌 방지
-public class Group extends BaseEntity{
+public class Group extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // ID 자동 생성
@@ -29,17 +29,11 @@ public class Group extends BaseEntity{
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<User> members = new ArrayList<>();
 
-
-    public Group(String name) {
-        this.name = name;
-    }
-
-    @Builder
-    private Group(String name, LocalDateTime createdDate) {
+    public Group(String name, LocalDateTime createdDate) {
         this.name = name;
         this.createdDate = createdDate;
     }
-
+    
     public GroupMetaInfoResponse toGroupMetaInfoResponse(List<String> userNames) {
         return new GroupMetaInfoResponse(name, createdDate, userNames);
     }

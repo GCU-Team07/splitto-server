@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: grafana
-  namespace: splitway-prometheus
+  namespace: splitway-monitoring
 spec:
   selector:
     app: grafana

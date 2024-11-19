@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: grafana
-  namespace: splitway-prometheus
+  namespace: splitway-monitoring
 spec:
   selector:
     matchLabels:

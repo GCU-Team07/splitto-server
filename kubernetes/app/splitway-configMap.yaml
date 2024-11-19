@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: splitway-config
+  namespace : splitway-backend
+data:
+  DB_CONNECTION: "138.2.123.128"
+  DB_NAME: "splitway_db"
+  GPT_DB_USERNAME : "super"
+  GPT_DB_PASSWORD : "Gachon1234!"

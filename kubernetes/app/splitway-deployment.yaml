@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: splitway-deployment
+  namespace: splitway-backend
+  labels:
+    splitway: back-end
+
+# Deployment Metadata
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      splitway: back-end
+
+  minReadySeconds: 60
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+
+  # Container Metadata
+  template:
+    metadata:
+      labels:
+        splitway: back-end
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+
+    spec:
+      containers:
+        - name: splitway-app
+          image: gcuteam7/splitway-server
+          ports:
+            - name: http
+              containerPort: 8080
+
+          envFrom:
+            - configMapRef:
+                name: splitway-config

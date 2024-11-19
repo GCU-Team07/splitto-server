@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: splitway-proxy
+  namespace: splitway-backend
+
+spec:
+  selector:
+    matchLabels:
+      app: splitway-proxy
+
+  template:
+    metadata:
+      labels:
+        app: splitway-proxy
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9113" # 9113 포트에서 scrap
+
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.17-alpine
+          ports:
+            - name: http
+              containerPort: 80
+          volumeMounts:
+            - name: config
+              mountPath: "/etc/nginx/"
+              readOnly: true
+
+        - name: exporter
+          image: nginx/nginx-prometheus-exporter:0.8.0 # nginx 데이터 추출기
+          ports:
+            - name: metrics
+              containerPort: 9113 # 9113 포트 개방
+          args:
+            - -nginx.scrape-uri=http://localhost/stub_status # nginx의 metric 정보 가져올 uri
+
+      volumes:
+        - name: config
+          configMap:
+            name: splitway-proxy-config

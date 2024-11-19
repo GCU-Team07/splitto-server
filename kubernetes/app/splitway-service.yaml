@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+
+# Service Metadata
+metadata:
+  name: splitway-service
+  namespace: splitway-backend
+  labels:
+    splitway: back-end
+
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    splitway: back-end
+  type: ClusterIP

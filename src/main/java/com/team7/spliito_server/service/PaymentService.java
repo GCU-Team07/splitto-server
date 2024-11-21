@@ -1,5 +1,7 @@
 package com.team7.spliito_server.service;
 
+import com.team7.spliito_server.dto.PaymentHistoryResponse;
+import com.team7.spliito_server.dto.SettlementResponse;
 import com.team7.spliito_server.dto.payment.AddPaymentRequest;
 import com.team7.spliito_server.dto.payment.AddPaymentResponse;
 import com.team7.spliito_server.model.Group;
@@ -12,8 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -71,4 +72,73 @@ public class PaymentService {
                         .orElseThrow(() -> new IllegalArgumentException("그룹에 존재하지 않는 유저입니다!")))
                 .collect(Collectors.toSet());
     }
+
+
+//    public List<PaymentHistoryResponse> getPaymentHistory(Long groupId) {
+//        List<Payment> payments = paymentRepository.findByGroupId(groupId);
+//
+//        return payments.stream()
+//                .map(payment -> {
+//                    List<PaymentDetail> paymentDetails = paymentDetailRepository.findByPayment(payment);
+//                    List<String> payMemberNames = paymentDetails.stream()
+//                            .map(pd -> pd.getPayUser().getName())
+//                            .collect(Collectors.toList());
+//
+//                    return new PaymentHistoryResponse(
+//                            payment.getItemName(),
+//                            payment.getTotalPrice()
+//
+//                    );
+//                })
+//                .collect(Collectors.toList());
+//    }
+    public List<SettlementResponse> getSettlement(Long groupId) {
+        List<PaymentDetail> paymentDetails = paymentDetailRepository.findByGroupId(groupId);
+
+        Map<String, Map<String, Integer>> balanceMap = new HashMap<>();
+
+        for (PaymentDetail detail : paymentDetails) {
+            String fromUser = detail.getPayUser().getName();
+            String toUser = detail.getPaidUser().getName();
+            int amount = detail.getPrice();
+
+            // fromUser가 toUser에게 빚진 금액을 누적
+            balanceMap.putIfAbsent(fromUser, new HashMap<>());
+            balanceMap.get(fromUser).merge(toUser, amount, Integer::sum);
+        }
+
+        // 상호 간의 빚을 상쇄하여 최종 정산 금액 계산
+        List<SettlementResponse> settlements = new ArrayList<>();
+        Set<String> users = balanceMap.keySet();
+
+        for (String userA : users) {
+            Map<String, Integer> owesTo = balanceMap.get(userA);
+            for (String userB : owesTo.keySet()) {
+                int amountAB = owesTo.get(userB);
+                int amountBA = balanceMap.getOrDefault(userB, Collections.emptyMap()).getOrDefault(userA, 0);
+                int netAmount = amountAB - amountBA;
+
+                if (netAmount > 0 && userA.compareTo(userB) < 0) {
+                    settlements.add(new SettlementResponse(
+                            userA + " → " + userB,
+                            netAmount
+                    ));
+                } else if (netAmount < 0 && userB.compareTo(userA) < 0) {
+                    settlements.add(new SettlementResponse(
+                            userB + " → " + userA,
+                            -netAmount
+                    ));
+                }
+            }
+        }
+
+        return settlements;
+    }
+
+
+
+
+
+
+
 }

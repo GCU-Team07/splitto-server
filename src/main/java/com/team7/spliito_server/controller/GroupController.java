@@ -47,7 +47,7 @@ public class GroupController {
     }
 
     @GetMapping("/{groupId}/members")
-    public GroupMetaInfoResponse getAllMembersInGroup(@Positive(message = "잘못된 값입니다!") @PathVariable Long groupId) {
+    public GroupMetaInfoResponse getAllMembersInGroup(@Positive(message = "잘못된 값입니다!") @PathVariable("groupId") Long groupId) {
         return groupService.getGroupMetaInfo(new GroupMetaInfoRequest(groupId));
     }
 }

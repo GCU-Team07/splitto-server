@@ -20,7 +20,7 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping("/{groupId}")
-    public AddPaymentResponse addPayment(@Positive(message = "잘못된 그룹입니다!") @PathVariable Long groupId,
+    public AddPaymentResponse addPayment(@Positive(message = "잘못된 그룹입니다!") @PathVariable("groupId") Long groupId,
                                          @Valid @RequestBody AddPaymentRequest addPaymentRequest) {
         return paymentService.addPayment(groupId, addPaymentRequest, LocalDateTime.now());
     } 
